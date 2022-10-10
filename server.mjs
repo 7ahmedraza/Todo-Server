@@ -14,7 +14,7 @@ const app = express()
 const port = process.env.PORT || 3000;
 
 
-let todos = [];
+// let todos = [];
 
 app.use(express.json());
 app.use(cors())
@@ -22,7 +22,7 @@ app.use(cors())
 app.post('/todo', (req, res) => {
   console.log(req.body) 
   
-  todos.push(req.body.text);
+  // todos.push(req.body.text);
 
   todoModel.create({ text: req.body.text,}, 
  (err, saved) => {
@@ -30,8 +30,7 @@ app.post('/todo', (req, res) => {
         console.log(saved);
         
         res.send({
-       message: "your todo is saved",
-        data: todos
+       message: "your todo is saved"
       })
       }else{
         res.status(500).send({
@@ -45,11 +44,23 @@ app.post('/todo', (req, res) => {
 
 
 app.get('/todos', (req, res) => {
+
+
+  todoModel.find({}, (err, data) => {
+    if(!err){
+      res.send({
+        message: "here is you todo list",
+        data: data
+      })
+      }else{
+        res.status(500).send({
+          message: "server error"
+        })
+      }
+  });
+
   
-res.send({
-  message: "here is you todo list",
-  data: todos
-})
+
 })
 
 
