@@ -61,15 +61,13 @@ app.get('/todos', (req, res) => {
 
   
 
-})
+}) 
 
-app.delete('/todos', (req, res) => {
-
-
-  todoModel.deleteMany({}, (err, data) => {
+app.delete('/todo/:id', (req, res) => {
+  todoModel.deleteOne({_id: req.params.id}, (err, data) => {
     if(!err){
       res.send({
-        message: "All Todos has been deleted successfully",
+        message: "Todo has been deleted successfully",
       })
       }else{
         res.status(500).send({
