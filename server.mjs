@@ -44,8 +44,6 @@ app.post('/todo', (req, res) => {
 
 
 app.get('/todos', (req, res) => {
-
-
   todoModel.find({}, (err, data) => {
     if(!err){
       res.send({
@@ -58,16 +56,13 @@ app.get('/todos', (req, res) => {
         })
       }
   });
-
-  
-
 }) 
 
-app.delete('/todo/:id', (req, res) => {
-  todoModel.deleteOne({_id: req.params.id}, (err, data) => {
+app.delete('/todos', (req, res) => {
+  todoModel.deleteMany({}, (err, data) => {
     if(!err){
       res.send({
-        message: "Todo has been deleted successfully",
+        message: "All Todos has been deleted successfully",
       })
       }else{
         res.status(500).send({
@@ -75,10 +70,32 @@ app.delete('/todo/:id', (req, res) => {
         })
       }
   });
+}) 
 
-  
+app.delete('/todo/:id', (req, res) => {
+  todoModel.deleteOne({_id: req.params.id}, (err, deletedData) => {
+  console.log("deleted: ", deletedData)  
+    if(!err){
 
-})
+      if(deletedData.deletedCount !== 0) {
+        res.send({
+          message: "Todo has been deleted successfully",
+        }) 
+      }else{
+        res.send({
+          message: "No Todo Found with this id: "+ req.params.id,
+        })
+      }
+
+      }else{
+        res.status(500).send({
+          message: "server error"
+        })
+      }
+  });
+}) 
+
+
 
 
 app.listen(port, () => {
