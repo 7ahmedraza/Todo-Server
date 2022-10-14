@@ -16,23 +16,31 @@
         <button type="submit">Add</button>
     </form>
     <button onclick="getAllTodos()">Refresh</button>
-    <h3 id="result">     </h3>
+    <h5 id="message"></h5>
+
+    <h3 id="result"></h3>
+
 
     <script>
         let api="https://harlequin-earthworm-tux.cyclic.app";
         function postTodo() {
             let todoText = (document.querySelector("#todo").value)
 
+        //     document.querySelector("#result").innerHTML += todoText; 
+        //  document.querySelector("#result").innerHTML += '<br>'; 
+
          axios.post(`${api}/todo`, {
             text: todoText
          })
                 .then(function (response) {
+                 console.log(response.data);
+          
+                 getAllTodos();
 
-                    // handle success
-
-                    console.log(response.data);
-                    document.querySelector("#result").innerHTML = "" 
-                  
+                    document.querySelector("#message").innerHTML = response.data.message
+                  setTimeout(() => {
+                    document.querySelector("#message").innerHTML = "";
+                  }, 2000);
                     response.data.data.map(eachTodo=>{
                         document.querySelector("#result").innerHTML += eachTodo 
                         document.querySelector("#result").innerHTML += '<br>'
@@ -70,7 +78,8 @@
                 })
 
             }
-          
+           
+            getAllTodos();
             setInterval(getAllTodos, 1000 );
         </script>
 

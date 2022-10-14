@@ -63,6 +63,25 @@ app.get('/todos', (req, res) => {
 
 })
 
+app.delete('/todos', (req, res) => {
+
+
+  todoModel.deleteMany({}, (err, data) => {
+    if(!err){
+      res.send({
+        message: "All Todos has been deleted successfully",
+      })
+      }else{
+        res.status(500).send({
+          message: "server error"
+        })
+      }
+  });
+
+  
+
+})
+
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
