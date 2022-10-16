@@ -16,7 +16,8 @@
         <button type="submit">Add</button>
     </form>
     <button onclick="getAllTodos()">Refresh</button>
-    <h5 id="message"></h5>
+    <button onclick="deleteAllTodos()">Delete All</button>
+    <h5 id="message" style="height:20px; color: red;"></h5>
 
     <h3 id="result"></h3>
 
@@ -61,17 +62,17 @@
         axios.get(`${api}/todos`)
                 .then(function (response) {
 
-                    // handle success
-                    console.log(response.data);
-                    document.querySelector("#result").innerHTML = "" 
-                  
-                    response.data.data.map(eachTodo=>{
-                        document.querySelector("#result").innerHTML += eachTodo.text 
-                        document.querySelector("#result").innerHTML += '<br>'
-
-                    })
-
-                })
+      // handle success
+        console.log(response.data);
+       document.querySelector("#result").innerHTML = ""               
+         response.data.data.map(eachTodo=>{
+        document.querySelector("#result").innerHTML += eachTodo.text 
+        document.querySelector("#result").innerHTML += 
+        `&nbsp;&nbsp; <button onclick="deleteTodo('${eachTodo._id}')"> Delete </button>` 
+       
+        document.querySelector("#result").innerHTML += '<br>'
+          })
+          })
                 .catch(function (error) {
                     // handle error
                     console.log(error);
@@ -80,9 +81,38 @@
             }
            
             getAllTodos();
-            setInterval(getAllTodos, 1000 );
-        </script>
+            setInterval(getAllTodos, 10000);
+           let deleteTodo = async (id) => {
+        try {    
+         let response = await axios.delete(`http://localhost:3000/todo/${id}`)
+      document.querySelector("#message").innerHTML = response.data.message
+      setTimeout(() => {
+        document.querySelector("#message").innerHTML = "" 
+      }, 2000);
 
+      getAllTodos();
 
+        } catch (error) {
+    console.log("error: ", error);   
+}
+
+}
+      
+        let deleteAllTodos = async () => {
+        try {    
+         let response = await axios.delete(`http://localhost:3000/todos`)
+      document.querySelector("#message").innerHTML = response.data.message
+      setTimeout(() => {
+        document.querySelector("#message").innerHTML = "" 
+      }, 2000);
+      
+      document.querySelector("#result").innerHTML = "";
+        } catch (error) {
+    console.log("error: ", error);   
+}
+
+}
+      
+      </script>
 </body>
 </html>
